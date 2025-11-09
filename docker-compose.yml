@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   db:
     image: mysql:8.0
@@ -11,7 +9,7 @@ services:
       MYSQL_USER: "wpuser"
       MYSQL_PASSWORD: "N4r$T8v!b1Qm6Sz0LpX"
     ports:
-      - "93306:3306" # host:container
+      - "7981:3306"  # host:container
     volumes:
       - db_data:/var/lib/mysql
     healthcheck:
@@ -28,14 +26,14 @@ services:
       db:
         condition: service_healthy
     environment:
-      WORDPRESS_DB_HOST: "db:3306"
+      WORDPRESS_DB_HOST: "db:3306"  # vẫn là port nội bộ container
       WORDPRESS_DB_USER: "wpuser"
       WORDPRESS_DB_PASSWORD: "N4r$T8v!b1Qm6Sz0LpX"
       WORDPRESS_DB_NAME: "wordpress"
       WORDPRESS_DEBUG: "false"
       WORDPRESS_TABLE_PREFIX: "wp_"
     ports:
-      - "98080:80"
+      - "7980:80"  # host:container
     volumes:
       - ./wp-content:/var/www/html/wp-content
 
