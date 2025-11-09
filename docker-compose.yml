@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: wp-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "s8V!q3xB9z#Kp2Lm6Tt4uYw1Nf0Gh7Rs"
+      MYSQL_DATABASE: "wordpress"
+      MYSQL_USER: "wpuser"
+      MYSQL_PASSWORD: "N4r$T8v!b1Qm6Sz0LpX"
+    ports:
+      - "93306:3306" # host:container
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  wordpress:
+    image: wordpress:latest
+    container_name: wp-site
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      WORDPRESS_DB_HOST: "db:3306"
+      WORDPRESS_DB_USER: "wpuser"
+      WORDPRESS_DB_PASSWORD: "N4r$T8v!b1Qm6Sz0LpX"
+      WORDPRESS_DB_NAME: "wordpress"
+      WORDPRESS_DEBUG: "false"
+      WORDPRESS_TABLE_PREFIX: "wp_"
+    ports:
+      - "98080:80"
+    volumes:
+      - ./wp-content:/var/www/html/wp-content
+
+volumes:
+  db_data:
